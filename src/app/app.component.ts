@@ -3,8 +3,11 @@ import { Component } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
+import {Post} from './interfaces/post.interface';
+import * as PostActions from './actions/post.actions';
+
 interface AppState { // TODO: move this to the interfaces folder
-  message: string;
+  post: Post;
 }
 
 @Component({
@@ -13,18 +16,27 @@ interface AppState { // TODO: move this to the interfaces folder
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ngrx-tutorial';
-  message$: Observable<string>;
+  post: Observable<Post>;
+  text: string;
 
   constructor(private store: Store<AppState>) {
-    this.message$ = this.store.select('message');
+    this.post = this.store.select('post');
   }
 
-  spanishMessage(): void {
-    this.store.dispatch({type: 'SPANISH'});
+  editText(): void {
+    this.store.dispatch(new PostActions.EditText(this.text));
   }
 
-  frenchMessage(): void {
-    this.store.dispatch({type: 'FRENCH'});
+  resetPost(): void {
+    this.store.dispatch(new PostActions.Reset());
   }
+
+  upvote(): void {
+    this.store.dispatch(new PostActions.Upvote());
+  }
+
+  downvote(): void {
+    this.store.dispatch(new PostActions.Downvote());
+  }
+
 }
